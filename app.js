@@ -259,30 +259,10 @@ function Keyboard() {
         return newKey;
     }
 
-    for (let i = 0; i < 28; i++) {
-        if (i < 10) {
-            let char = keyboard.keyorder[i].toUpperCase();
-            let newKey = keyboard.newKey(char, char, false);
-            keyboard.rows[0].appendChild(newKey);
-        }
-        else if (i < 19) {
-            let char = keyboard.keyorder[i].toUpperCase();
-            let newKey = keyboard.newKey(char, char, false);
-            keyboard.rows[1].appendChild(newKey);
-        }
-        else if (i === 19) {
-            let newKey = keyboard.newKey("Enter", "Enter", true);
-            keyboard.rows[2].appendChild(newKey);
-        }
-        else if (i < 27) {
-            let char = keyboard.keyorder[i-1].toUpperCase();
-            let newKey = keyboard.newKey(char, char, false);
-            keyboard.rows[2].appendChild(newKey);
-        }
-        else {
-            let newKey = keyboard.newKey("<svg aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\" height=\"20\" viewBox=\"0 0 24 24\" width=\"20\"><path fill=\"var(--color-tone-1)\" d=\"M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H7.07L2.4 12l4.66-7H22v14zm-11.59-2L14 13.41 17.59 17 19 15.59 15.41 12 19 8.41 17.59 7 14 10.59 10.41 7 9 8.41 12.59 12 9 15.59z\"></path></svg>", "Backspace", true);
-            keyboard.rows[2].appendChild(newKey);
-        }
+    keyboard.addKey = function(index, row) {
+        let char = keyboard.keyorder[index].toUpperCase();
+        let newKey = keyboard.newKey(char, char, false);
+        keyboard.rows[row].appendChild(newKey);
     }
 
     keyboard.updateColors = function(wordleObject) {
@@ -304,6 +284,21 @@ function Keyboard() {
             })
         })
     }
+
+    let newKey = keyboard.newKey("Enter", "Enter", true);
+    keyboard.rows[2].appendChild(newKey);
+    var row = 0;
+    for (let i = 0; i < 26; i++) {
+        if (i === 19) {
+            row = 2;
+        }
+        else if (i === 10) {
+            row = 1;
+        }
+        keyboard.addKey(i, row);
+    }
+    newKey = keyboard.newKey("<svg aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\" height=\"20\" viewBox=\"0 0 24 24\" width=\"20\"><path fill=\"var(--color-tone-1)\" d=\"M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H7.07L2.4 12l4.66-7H22v14zm-11.59-2L14 13.41 17.59 17 19 15.59 15.41 12 19 8.41 17.59 7 14 10.59 10.41 7 9 8.41 12.59 12 9 15.59z\"></path></svg>", "Backspace", true);
+    keyboard.rows[2].appendChild(newKey);
 
 
     return keyboard;
