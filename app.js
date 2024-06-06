@@ -289,11 +289,11 @@ function Keyboard() {
     keyboard.rows[2].appendChild(newKey);
     var row = 0;
     for (let i = 0; i < 26; i++) {
-        if (i === 19) {
-            row = 2;
-        }
-        else if (i === 10) {
-            row = 1;
+        switch (i) {
+            case 19:
+                row = 2; break;
+            case 10:
+                row = 1; break;
         }
         keyboard.addKey(i, row);
     }
