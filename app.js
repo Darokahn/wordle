@@ -387,7 +387,7 @@ async function init() {
 
     const chosenWord = chooseWord(words, mode);
 
-    console.log("Hey hacker, the word is", chosenWord);
+    console.log(`Hey hacker, the word is ${chosenWord}. If you're gonna dig around my code, why don't you fix some bugs?`);
     
     let g = Grid(document.getElementById("wordle-grid"), 6, 5);
     
@@ -424,4 +424,4 @@ var k;
 
 init();
 
-let reset = () => {localStorage.clear();}
+let reset = () => {localStorage.clear(); window.location.reload();}
