@@ -137,8 +137,8 @@ nav ul li {
 }
 
 @keyframes wiggle {
-    from {transform: translateX(10px);}
-    to {transform: translateX(-10px);}
+    from {transform: translateX(5px);}
+    to {transform: translateX(-5px);}
 }
 
 @keyframes fade {
