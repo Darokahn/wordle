@@ -244,59 +244,46 @@ function Keyboard() {
         rows: keyboardDiv.children
     };
 
-    // this part is bad :(
-    
-    for (var i = 0; i < 10; i++) {
-        let char = keyboard.keyorder[i].toUpperCase();
+    keyboard.newKey = function(char, keydown, wide) {
         let newKey = document.createElement("button");
         newKey.classList.add("key");
+        console.log("wide", wide);
+        if (wide === true) {
+            newKey.classList.add("wide");
+        }
         newKey.innerHTML = char;
         newKey.onclick = function() {
-            let event = new KeyboardEvent('keydown', {key: char});
+            let event = new KeyboardEvent('keydown', {key: keydown});
             document.dispatchEvent(event);
         };
-        keyboard.rows[0].appendChild(newKey);
+        return newKey;
     }
-    for (i; i < 19; i++) {
-        let char = keyboard.keyorder[i].toUpperCase();
-        let newKey = document.createElement("button");
-        newKey.classList.add("key");
-        newKey.innerHTML = char;
-        newKey.onclick = function() {
-            let event = new KeyboardEvent('keydown', {key: char});
-            document.dispatchEvent(event);
-        };
-        keyboard.rows[1].appendChild(newKey);
+
+    for (let i = 0; i < 28; i++) {
+        if (i < 10) {
+            let char = keyboard.keyorder[i].toUpperCase();
+            let newKey = keyboard.newKey(char, char, false);
+            keyboard.rows[0].appendChild(newKey);
+        }
+        else if (i < 19) {
+            let char = keyboard.keyorder[i].toUpperCase();
+            let newKey = keyboard.newKey(char, char, false);
+            keyboard.rows[1].appendChild(newKey);
+        }
+        else if (i === 19) {
+            let newKey = keyboard.newKey("Enter", "Enter", true);
+            keyboard.rows[2].appendChild(newKey);
+        }
+        else if (i < 27) {
+            let char = keyboard.keyorder[i-1].toUpperCase();
+            let newKey = keyboard.newKey(char, char, false);
+            keyboard.rows[2].appendChild(newKey);
+        }
+        else {
+            let newKey = keyboard.newKey("<svg aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\" height=\"20\" viewBox=\"0 0 24 24\" width=\"20\"><path fill=\"var(--color-tone-1)\" d=\"M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H7.07L2.4 12l4.66-7H22v14zm-11.59-2L14 13.41 17.59 17 19 15.59 15.41 12 19 8.41 17.59 7 14 10.59 10.41 7 9 8.41 12.59 12 9 15.59z\"></path></svg>", "Backspace", true);
+            keyboard.rows[2].appendChild(newKey);
+        }
     }
-    let newKey = document.createElement("button");
-    newKey.classList.add("key");
-    newKey.innerHTML = "ENTER";
-    newKey.classList.add("wide");
-    newKey.onclick = function() {
-        let event = new KeyboardEvent('keydown', {key: 'Enter'});
-        document.dispatchEvent(event);
-    }
-    keyboard.rows[2].appendChild(newKey);
-    for (i; i < 26; i++) {
-        let char = keyboard.keyorder[i].toUpperCase();
-        let newKey = document.createElement("button");
-        newKey.classList.add("key");
-        newKey.innerHTML = char;
-        newKey.onclick = function() {
-            let event = new KeyboardEvent('keydown', {key: char});
-            document.dispatchEvent(event);
-        };
-        keyboard.rows[2].appendChild(newKey);
-    }
-    newKey = document.createElement("button");
-    newKey.classList.add("key");
-    newKey.classList.add("wide");
-    newKey.innerHTML =  "<svg aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\" height=\"20\" viewBox=\"0 0 24 24\" width=\"20\"><path fill=\"var(--color-tone-1)\" d=\"M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H7.07L2.4 12l4.66-7H22v14zm-11.59-2L14 13.41 17.59 17 19 15.59 15.41 12 19 8.41 17.59 7 14 10.59 10.41 7 9 8.41 12.59 12 9 15.59z\"></path></svg>"
-    newKey.onclick = function() {
-        let event = new KeyboardEvent('keydown', {key: "Backspace"});
-        document.dispatchEvent(event);
-    };
-    keyboard.rows[2].appendChild(newKey);
 
     keyboard.updateColors = function(wordleObject) {
         let yellows = wordleObject.yellowLetters;
