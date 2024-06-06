@@ -203,7 +203,7 @@ async function Wordle(gridObject, word) {
     wordle.win = function() {
         putMessage("You win!");
         document.removeEventListener('keydown', onKeypress);
-        console.log("this should lock inputs");
+        console.log("this should lock inputs!");
     };
 
     wordle.lose = function() {
@@ -394,6 +394,8 @@ async function init() {
     
     w = await Wordle(g, chosenWord);
 
+    document.addEventListener("keydown", onKeypress);
+
     if (mode === 'daily') {
         if (guesses = localStorage.getItem("last-game")) {
             w.guessHistory = localStorage.getItem("last-game").split(",");
@@ -414,9 +416,7 @@ async function init() {
     
     else if (mode === 'random') {
         localStorage.clear();
-    }
-        
-    document.addEventListener("keydown", onKeypress);
+    }   
 }
 
 var w;
