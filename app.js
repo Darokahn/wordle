@@ -387,7 +387,19 @@ async function getWordsObject() {
 
 async function init() {
 
-    const mode = 'daily';
+    var mode;
+    var storedMode = localStorage.getItem('mode');
+
+    console.log(storedMode);
+
+    if (storedMode) {
+        mode = storedMode; 
+        console.log("testing");
+    }
+    else {
+        mode = 'daily';
+        localStorage.setItem('mode', 'daily');
+    }
 
     const today = new Date();
 
@@ -416,13 +428,14 @@ async function init() {
         let lastPlayed = new Date(localStorage.getItem("last-played"));
 
         if (daysSinceProjectStart(lastPlayed) != daysSinceProjectStart(today)) {
-            localStorage.clear();
+            localStorage.setItem("last-game", '');
             localStorage.setItem("last-played", today);
         }
     }
     
     else if (mode === 'random') {
         localStorage.clear();
+        localStorage.setItem('mode', 'random');
     }   
 }
 
