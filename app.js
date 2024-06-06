@@ -235,6 +235,9 @@ function Keyboard() {
         keyorder: "qwertyuiopasdfghjklzxcvbnm",
         rows: keyboardDiv.children
     };
+
+    // this part is bad :(
+    
     for (var i = 0; i < 10; i++) {
         let char = keyboard.keyorder[i].toUpperCase();
         let newKey = document.createElement("button");
