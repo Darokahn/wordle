@@ -1,10 +1,10 @@
-async function Wordle(gridObject, word) {
+async function Wordle(gridObject, wordsObject, word) {
 
     // I don't know if this is allowed, but I'm using this function to mimic how you would initialize a python object.
 
     let wordle = {
         keyboard: Keyboard(),
-        wordsObject: await getWordsObject(),
+        wordsObject: wordsObject,
         gridObject: gridObject,
         word: word,
         currentRow: 0, 
@@ -408,7 +408,7 @@ async function init() {
     
     let g = Grid(document.getElementById("wordle-grid"), 6, 5);
     
-    w = await Wordle(g, chosenWord);
+    w = await Wordle(g, words, chosenWord);
 
     document.addEventListener("keydown", onKeypress);
 
