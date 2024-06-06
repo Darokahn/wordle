@@ -390,11 +390,8 @@ async function init() {
     var mode;
     var storedMode = localStorage.getItem('mode');
 
-    console.log(storedMode);
-
     if (storedMode) {
         mode = storedMode; 
-        console.log("testing");
     }
     else {
         mode = 'daily';
