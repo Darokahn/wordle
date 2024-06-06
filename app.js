@@ -203,7 +203,6 @@ async function Wordle(gridObject, word) {
     wordle.win = function() {
         putMessage("You win!");
         document.removeEventListener('keydown', onKeypress);
-        console.log("this should lock inputs!");
     };
 
     wordle.lose = function() {
