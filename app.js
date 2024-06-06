@@ -176,7 +176,15 @@ async function Wordle(gridObject, word) {
                 square.classList.remove("has-letter");
             }
             else {
+                let keyframes = [
+                    {transform: 'scale(1)'},
+                    {transform: 'scale(1.1)'},
+                    {transform: 'scale(1)'}
+                ];
                 square.innerHTML = this.currentGuessString[i].toUpperCase();
+                if (!square.classList.contains("has-letter")) {
+                    square.animate(keyframes, {duration: 100});
+                }
                 square.classList.add("has-letter");
             }
         }
