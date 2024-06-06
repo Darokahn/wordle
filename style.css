@@ -158,3 +158,9 @@ nav ul li {
         width: 90vw;
     }
 }
+
+@media screen and (max-width: 350px) {
+    .key {
+        min-width: 25px;
+    }
+}
