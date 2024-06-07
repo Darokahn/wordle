@@ -10,9 +10,7 @@ async function Wordle(gridObject, wordsObject, word) {
         currentRow: 0, 
         currentGuessString: "",
         guessHistory: [],
-        blackLetters: new Set(), 
-        greenLetters: new Set(), 
-        yellowLetters: new Set()
+        trackedLetters: {}
     };
 
     wordle.guess = function(word) {
@@ -44,7 +42,6 @@ async function Wordle(gridObject, wordsObject, word) {
                 else {
                     thisGuess[i] = 'black';
                 }
-                this.greenLetters.add(cLetter);
             }
             else if (correctWord.includes(gLetter)) {
                 if (lettersCount[gLetter] != 0) {
@@ -54,15 +51,49 @@ async function Wordle(gridObject, wordsObject, word) {
                 else {
                     thisGuess[i] = 'black';
                 }
-                this.yellowLetters.add(gLetter);
             }
             else {
                 thisGuess[i] = "black";
-                this.blackLetters.add(gLetter);
             }
         }
         return thisGuess;
     };
+
+    wordle.updateTrackedLetters = function(guessOutcome, guess) {
+        for (let i = 0; i < guess.length; i++) {
+
+            let letter = guess[i];
+            let status = guessOutcome[i];
+
+            if (!(letter in this.trackedLetters)) {
+                this.trackedLetters[letter] = TrackedLetter();
+            }
+
+            let letterObj = this.trackedLetters[letter];
+
+            switch (status) {
+                case "yellow":
+                    letterObj.forbiddenPositions.add(i);
+                    letterObj.positiveOccurrencesThisRow++;
+                    break;
+                case "black": 
+                    letterObj.forbiddenPositions.add(i);
+                    letterObj.negativeOccurencesThisRow++;
+                    break;
+                case "green":
+                    letterObj.knownPositions.add(i);
+                    letterObj.positiveOccurrencesThisRow++;
+                    break;
+            }
+        }
+        Object.values(this.trackedLetters).forEach(function(letter) {
+            letter.minimumOccurrences = Math.max(letter.positiveOccurrencesThisRow, letter.minimumOccurrences);
+            if (letter.negativeOccurencesThisRow) {
+                letter.maximumOccurrences = letter.minimumOccurrences;
+            }
+            letter.resetRow();
+        })
+    }
 
     wordle.validateWord = function() {
         let words = this.wordsObject;
@@ -95,7 +126,6 @@ async function Wordle(gridObject, wordsObject, word) {
                 {transform: 'scaleY(0.4)'},
                 {transform: 'scaleY(1)'},
             ];
-
             let args = {
                 duration: 400,
                 fill: 'forwards'
@@ -103,11 +133,10 @@ async function Wordle(gridObject, wordsObject, word) {
             setTimeout(function() {
                 s.animate(keyFrames, args);
                 setTimeout(func, 200);
-            }, i * 300 * delay);
-            
+            }, i * 300 * delay); 
         };
         if (doDelay){
-            await new Promise(resolve => setTimeout(resolve, 1600));
+            await new Promise(resolve => setTimeout(resolve, 1700));
         }
     };
 
@@ -135,6 +164,7 @@ async function Wordle(gridObject, wordsObject, word) {
             let g = guesses[i];
             this.currentGuessString = g;
             let guessOutcome = this.guess(g);
+            this.updateTrackedLetters(guessOutcome, this.currentGuessString);
             this.updateSquares(guessOutcome, false);
             this.keyboard.updateColors(this);
             this.updateEmpties();
@@ -150,6 +180,9 @@ async function Wordle(gridObject, wordsObject, word) {
             return;
         }
         let guessOutcome = this.guess(this.currentGuessString);
+
+        this.updateTrackedLetters(guessOutcome, this.currentGuessString);
+
         if (guessOutcome.includes("")) {
             console.log("guess aborted");
             return;
@@ -173,7 +206,7 @@ async function Wordle(gridObject, wordsObject, word) {
             let square = row[i];
             if (i >= this.currentGuessString.length) {
                 square.innerHTML = "";
-                square.classList.remove("has-letter");
+                square.classList.remove('has-letter', 'impossible', 'certain', 'impossible', 'unknown');
             }
             else {
                 let keyframes = [
@@ -181,11 +214,19 @@ async function Wordle(gridObject, wordsObject, word) {
                     {transform: 'scale(1.1)'},
                     {transform: 'scale(1)'}
                 ];
-                square.innerHTML = this.currentGuessString[i].toUpperCase();
+                let char = this.currentGuessString[i];
+                square.innerHTML = char.toUpperCase();
                 if (!square.classList.contains("has-letter")) {
                     square.animate(keyframes, {duration: 100});
                 }
                 square.classList.add("has-letter");
+                if (char in this.trackedLetters) {
+                    let condition = this.trackedLetters[char].positionStatus(i);
+                    square.classList.remove('impossible', 'certain', 'impossible');
+                    square.classList.add(condition);
+                    let newDiv = document.createElement('div');
+                    square.appendChild(newDiv);
+                }
             }
         }
     };
@@ -247,7 +288,6 @@ function Keyboard() {
     keyboard.newKey = function(char, keydown, wide) {
         let newKey = document.createElement("button");
         newKey.classList.add("key");
-        console.log("wide", wide);
         if (wide === true) {
             newKey.classList.add("wide");
         }
@@ -266,19 +306,18 @@ function Keyboard() {
     }
 
     keyboard.updateColors = function(wordleObject) {
-        let yellows = wordleObject.yellowLetters;
-        let greens = wordleObject.greenLetters;
-        let blacks = wordleObject.blackLetters;
         Array.from(this.rows).forEach(function(row) {
             Array.from(row.children).forEach(function(square) {
                 let char = square.innerHTML.toLowerCase();
-                if (yellows.has(char)) {
+                if (char in wordleObject.trackedLetters) var letterObj = wordleObject.trackedLetters[char];
+                else return;
+                if (letterObj.knownPositions.size === 0 && letterObj.maximumOccurrences > 0) {
                     square.classList.add("yellow");
                 }
-                else if (greens.has(char)) {
+                else if (letterObj.knownPositions.size > 0) {
                     square.classList.add("green");
                 }
-                else if (blacks.has(char)) {
+                else if (letterObj.maximumOccurrences === 0) {
                     square.classList.add("black");
                 }
             })
@@ -302,6 +341,36 @@ function Keyboard() {
 
 
     return keyboard;
+}
+
+function TrackedLetter() {
+    let newLetter = {
+        forbiddenPositions: new Set(),
+        knownPositions: new Set(),
+        positiveOccurrencesThisRow: 0,
+        negativeOccurencesThisRow: 0,
+        minimumOccurrences: 0,
+        maximumOccurrences: 5
+    };
+    newLetter.resetRow = function() {
+        this.positiveOccurrencesThisRow = 0;
+        this.negativeOccurencesThisRow = 0;
+    };
+
+    newLetter.positionStatus = function(index) {
+        if (this.knownPositions.has(index)) {
+            return "certain";
+        }
+        if (this.maximumOccurrences === 0 || this.forbiddenPositions.has(index)) {
+            return "impossible";
+        }
+        if (this.maximumOccurrences > 0) {
+            return "possible";
+        }
+        return "unknown";
+    };
+
+    return newLetter;
 }
 
 function putMessage(mess) {
@@ -352,11 +421,9 @@ function chooseWord(wordsObject, arg) {
     var index = 0;
     switch(arg) {
         case 'daily':
-            index = daysSinceProjectStart();
-            break;
+            index = daysSinceProjectStart(); break;
         case 'random':
-            index = Math.floor(Math.random() * answers.length);
-            break;
+            index = Math.floor(Math.random() * answers.length); break;
     }
     return answers[index];
 }
@@ -368,7 +435,6 @@ async function getWordsObject() {
 }
 
 async function init() {
-
     var mode;
     var storedMode = localStorage.getItem('mode');
 

@@ -100,6 +100,11 @@ nav ul li {
     font-size: 2rem;
     font-weight: bold;
     user-select: none;
+    flex-direction: column;
+}
+
+.square * {
+    flex: 0 0 auto;
 }
 
 .square.flip {
@@ -111,9 +116,26 @@ nav ul li {
     border: 2px solid lightgray;
 }
 
+.empty div {
+    width: 60%;
+    height: 10%;
+    border-radius: 1px;
+}
+
 .empty.has-letter {
     border-color: #121212;
-    /* animation: type .1s forwards; */
+}
+
+.empty.has-letter.certain div {
+    background-color: #6ca965;
+}
+
+.empty.has-letter.possible div {
+    background-color: #c8b653;
+}
+
+.empty.has-letter.impossible div {
+    background-color: black;
 }
 
 .green {
