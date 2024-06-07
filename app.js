@@ -36,7 +36,6 @@ async function Wordle(gridObject, wordsObject, word) {
         for (let i = 0; i < 5; i++) {
             let gLetter = word[i];
             let cLetter = correctWord[i];
-            console.log(gLetter, cLetter);
             if (gLetter === cLetter) {
                 thisGuess[i] = 'green';
                 lettersCount[gLetter]--;
@@ -62,7 +61,6 @@ async function Wordle(gridObject, wordsObject, word) {
                 thisGuess[i] = "black";
             }
         }
-        console.log(thisGuess);
         return thisGuess;
     };
 
