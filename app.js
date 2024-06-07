@@ -31,19 +31,25 @@ async function Wordle(gridObject, wordsObject, word) {
             return thisGuess;
         }
         let correctWord = this.word;
+
+        //pass through once to check greens with priority
         for (let i = 0; i < 5; i++) {
             let gLetter = word[i];
             let cLetter = correctWord[i];
+            console.log(gLetter, cLetter);
             if (gLetter === cLetter) {
-                if (lettersCount[gLetter] != 0) {
-                    thisGuess[i] = 'green';
-                    lettersCount[gLetter]--;
-                }
-                else {
-                    thisGuess[i] = 'black';
-                }
+                thisGuess[i] = 'green';
+                lettersCount[gLetter]--;
             }
-            else if (correctWord.includes(gLetter)) {
+        }
+
+        //pass through again; yellows and blacks get leftovers
+        for (let i = 0; i < 5; i++) {
+            let gLetter = word[i];
+            if (thisGuess[i] != '') {
+                continue;
+            }
+            if (correctWord.includes(gLetter)) {
                 if (lettersCount[gLetter] != 0) {
                     thisGuess[i] = 'yellow';
                     lettersCount[gLetter]--;
@@ -56,6 +62,7 @@ async function Wordle(gridObject, wordsObject, word) {
                 thisGuess[i] = "black";
             }
         }
+        console.log(thisGuess);
         return thisGuess;
     };
 
@@ -92,7 +99,7 @@ async function Wordle(gridObject, wordsObject, word) {
                 letter.maximumOccurrences = letter.minimumOccurrences;
             }
             letter.resetRow();
-        })
+        });
     }
 
     wordle.validateWord = function() {
@@ -453,7 +460,7 @@ async function init() {
     const chosenWord = chooseWord(words, mode);
 
     console.log(`Hey hacker, the word is ${chosenWord}. If you're gonna dig around my code, why don't you fix some bugs?`);
-    console.log('For a few site functions, type "help()"');
+    console.log('For a few site functions, type "help"');
     
     let g = Grid(document.getElementById("wordle-grid"), 6, 5);
     
@@ -513,4 +520,5 @@ init();
 let reset = function() {localStorage.clear(); window.location.reload();};
 let makeRandom = function() {localStorage.mode = 'random'; window.location.reload();};
 let makeDaily = function() {localStorage.mode = 'daily'; window.location.reload();};
-let help = function() {console.log("to change something about the site, type one of the following here:\nchange your mode to random: makeRandom()\nchange to daily: makeDaily()\nclear all data: reset()");};
+let help = "to change something about the site, type one of the following here: change your mode to random: makeRandom(); change to daily: makeDaily(); clear all data: reset()";
+let noRestrict = function() {w.validateWord = function() {return true;};};
