@@ -409,9 +409,9 @@ function onKeypress(event) {
     }
 }
 
-function daysSinceProjectStart() {
+function daysSinceProjectStart(date) {
     const start = new Date(2024, 5, 5);
-    let milliseconds = new Date() - start;
+    let milliseconds = date - start;
     let days = Math.floor(milliseconds / 86_400_000);
     return days;
 }
@@ -421,7 +421,7 @@ function chooseWord(wordsObject, arg) {
     var index = 0;
     switch(arg) {
         case 'daily':
-            index = daysSinceProjectStart(); break;
+            index = daysSinceProjectStart(new Date()); break;
         case 'random':
             index = Math.floor(Math.random() * answers.length); break;
     }
@@ -462,11 +462,6 @@ async function init() {
     document.addEventListener("keydown", onKeypress);
 
     if (mode === 'daily') {
-        if (guesses = localStorage.getItem("last-game")) {
-            w.guessHistory = localStorage.getItem("last-game").split(",");
-            w.computerGuess();
-        }
-
         if (!localStorage.getItem("last-played")) {
             localStorage.setItem("last-played", today);
         }
@@ -476,6 +471,11 @@ async function init() {
         if (daysSinceProjectStart(lastPlayed) != daysSinceProjectStart(today)) {
             localStorage.setItem("last-game", '');
             localStorage.setItem("last-played", today);
+        }
+
+        if (guesses = localStorage.getItem("last-game")) {
+            w.guessHistory = localStorage.getItem("last-game").split(",");
+            w.computerGuess();
         }
     }
     
