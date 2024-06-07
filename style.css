@@ -12,6 +12,9 @@ body {
 }
 
 #title.has-cursor::after {
+    position: absolute;
+    bottom: 12px;
+    right: -5px;
     content: "|";
     font-family: arial;
 }

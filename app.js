@@ -453,6 +453,7 @@ async function init() {
     const chosenWord = chooseWord(words, mode);
 
     console.log(`Hey hacker, the word is ${chosenWord}. If you're gonna dig around my code, why don't you fix some bugs?`);
+    console.log('For a few site functions, type "help()"');
     
     let g = Grid(document.getElementById("wordle-grid"), 6, 5);
     
@@ -509,4 +510,7 @@ var k;
 
 init();
 
-let reset = () => {localStorage.clear(); window.location.reload();}
+let reset = function() {localStorage.clear(); window.location.reload();};
+let makeRandom = function() {localStorage.mode = 'random'; window.location.reload();};
+let makeDaily = function() {localStorage.mode = 'daily'; window.location.reload();};
+let help = function() {console.log("to change something about the site, type one of the following here:\nchange your mode to random: makeRandom()\nchange to daily: makeDaily()\nclear all data: reset()");};
