@@ -481,7 +481,26 @@ async function init() {
     else if (mode === 'random') {
         localStorage.clear();
         localStorage.setItem('mode', 'random');
-    }   
+    }
+
+    let extraText = "Clone";
+    var title = document.getElementById("title");
+    var i = 0;
+    setTimeout(function() {
+        title.classList.add('has-cursor');
+        var titleAnimation = setInterval(function() {
+            if (i < extraText.length) {
+                title.textContent += extraText[i];
+            }
+            else if (i == extraText.length + 3) {
+                title.classList.remove('has-cursor');
+                clearInterval(titleAnimation);
+                return;
+            }
+            i++;
+        }, 90);
+    }, 1000);
+    document.body.style.display = 'flex';
 }
 
 var w;

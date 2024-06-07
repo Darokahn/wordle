@@ -4,10 +4,16 @@ body {
     height: 100vh;
     margin: 0;
     display: flex;
+    display: none;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     gap: 15px;
+}
+
+#title.has-cursor::after {
+    content: "|";
+    font-family: arial;
 }
 
 nav ul {
@@ -19,6 +25,7 @@ nav ul li {
     font-size: 2rem;
     font-family: "Bevan";
     font-weight: 400;
+    padding: 2px;
     margin: 0;
 }
 
