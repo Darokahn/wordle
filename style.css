@@ -193,7 +193,7 @@ nav ul li {
 
 @media screen and (max-width: 310px) {
     .key {
-        min-width: 20px;
+        min-width: 15px;
         max-width: 25px;
     }
 }
