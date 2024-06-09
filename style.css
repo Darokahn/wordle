@@ -190,3 +190,10 @@ nav ul li {
         min-width: 25px;
     }
 }
+
+@media screen and (max-width: 310px) {
+    .key {
+        min-width: 20px;
+        max-width: 25px;
+    }
+}
