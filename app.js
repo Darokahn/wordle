@@ -363,7 +363,6 @@ function TrackedLetter() {
     };
 
     newLetter.positionStatus = function(index) {
-        console.log(this);
         if (this.knownPositions.has(index)) {
             return "certain";
         }
