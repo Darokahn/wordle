@@ -363,7 +363,7 @@ function TrackedLetter() {
     };
 
     newLetter.positionStatus = function(index) {
-        if (this.knownPositions.has(index) && this.positiveOccurrencesThisRow <= this.maximumOccurrences) {
+        if (this.knownPositions.has(index)) {
             return "certain";
         }
         if (this.maximumOccurrences === 0 || this.forbiddenPositions.has(index) || (this.maximumOccurrences - this.minimumOccurrences) === 0) {
