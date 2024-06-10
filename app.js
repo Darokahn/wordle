@@ -363,14 +363,20 @@ function TrackedLetter() {
     };
 
     newLetter.positionStatus = function(index) {
+        console.log(this);
         if (this.knownPositions.has(index)) {
             return "certain";
         }
-        if (this.maximumOccurrences === 0 || this.forbiddenPositions.has(index) || (this.maximumOccurrences - this.minimumOccurrences) === 0) {
+        if (this.maximumOccurrences === 0 || this.forbiddenPositions.has(index)) {
             return "impossible";
         }
         if (this.maximumOccurrences > 0) {
-            return "possible";
+            if (this.maximumOccurrences != this.minimumOccurrences) {
+                return "possible";
+            }
+            else {
+                return "impossible";
+            }
         }
         return "unknown";
     };
